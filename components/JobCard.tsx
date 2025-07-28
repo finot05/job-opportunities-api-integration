@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import { Job } from '../types';
+import { Job } from '../types/types';
 
 
 type Props = {

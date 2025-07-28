@@ -1,30 +1,16 @@
-"use client";
+'use client';
 
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Job } from "@/types";
+import { useParams } from 'next/navigation';
+import { useGetJobByIdQuery } from '@/services/jobsApi';
 
 export default function JobDetailPage() {
   const { id } = useParams();
-  const [job, setJob] = useState<Job | null>(null);
-  const [loading, setLoading] = useState(true);
+  const { data, error, isLoading } = useGetJobByIdQuery(id as string);
+  const job = data?.data;
 
-  useEffect(() => {
-    const fetchJob = async () => {
-      try {
-        const res = await fetch(`https://akil-backend.onrender.com/opportunities/${id}`);
-        const data = await res.json();
-        setJob(data.data); 
-      } catch (err) {
-        setJob(null);
-      }finally{
-        setLoading(false)
-      }
-    };
-    if (id) fetchJob();
-  }, [id]);
-  if (loading) return <div className="p-5 text-gray-500">Loading...</div>;
-  if (!job) return <div className="p-5 text-red-500">Job not found</div>;
+  if (isLoading) return <div className="p-5 text-gray-500">Loading...</div>;
+  if (!job || error) return <div className="p-5 text-red-500">Job not found</div>;
+
 
   const colorMap = ["text-[#FFB836]", "text-red-400", "text-green-500"];
   const borderMap = ["border-blue-200", "border-red-200", "border-green-200"];
